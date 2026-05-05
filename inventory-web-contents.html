@@ -259,7 +259,7 @@
 
       try {
         const res = await fetch(endpoint, {
-          headers: { "Authorization": `Basic ${AUTH_KEY}` }
+          headers: { "Authorization": `Bearer ${AUTH_KEY}` }
         });
 
         document.getElementById("loading").style.display = "none";
