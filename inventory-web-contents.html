@@ -257,54 +257,42 @@
       });
     }
 
+    const MOCK_DATA = [
+      {
+        "CreatedDateTime": "2016-09-26T10:18:52.163+00:00",
+        "CreateLocation": "NBARNETT-TN",
+        "CreatedBy": "Admin",
+        "UpdatedDateTime": "2016-09-26T10:18:52.163+00:00",
+        "UpdatedBy": "Admin",
+        "Id": 19,
+        "Value": "This is my performance web content!",
+        "ContentType": { "Id": 1, "Description": "Web Synopsis", "Inactive": false },
+        "ProductionElementId": 247
+      }
+    ];
+
     async function load() {
-      if (!AUTH_KEY || !PRODUCTION_ELEMENT_ID || !endpoint) {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error-msg").textContent =
-          "Missing required parameters: auth, key, and base (or a referrer) must all be present.";
-        document.getElementById("error-box").style.display = "block";
+      // TODO: remove mock and re-enable fetch once CORS is resolved
+      console.log("[InventoryWebContents] Using mock data");
+      await new Promise(r => setTimeout(r, 600)); // simulate network delay
+      const data = MOCK_DATA;
+      console.log("[InventoryWebContents] Data received:", data);
+
+      document.getElementById("loading").style.display = "none";
+
+      if (!Array.isArray(data) || data.length === 0) {
+        console.warn("[InventoryWebContents] Empty result set");
+        document.getElementById("empty").style.display = "block";
         return;
       }
 
-      try {
-        console.log("[InventoryWebContents] Fetching:", endpoint);
-        const res = await fetch(endpoint, {
-          headers: { "Authorization": `Bearer ${AUTH_KEY}` }
-        });
-
-        console.log("[InventoryWebContents] Response:", res.status, res.statusText);
-        document.getElementById("loading").style.display = "none";
-
-        if (!res.ok) {
-          const body = await res.text().catch(() => "");
-          console.error("[InventoryWebContents] Error body:", body);
-          throw new Error(`HTTP ${res.status} — ${res.statusText} (${endpoint})`);
-        }
-
-        const data = await res.json();
-        console.log("[InventoryWebContents] Data received:", data);
-
-        if (!Array.isArray(data) || data.length === 0) {
-          console.warn("[InventoryWebContents] Empty result set");
-          document.getElementById("empty").style.display = "block";
-          return;
-        }
-
-        document.getElementById("count-badge").textContent =
-          data.length === 1 ? "1 item" : `${data.length} items`;
-        renderCards(data);
-        document.getElementById("content-grid").style.display = "grid";
-        document.getElementById("footer").textContent =
-          `Production element ${PRODUCTION_ELEMENT_ID} · Fetched ${new Date().toLocaleTimeString()}`;
-        console.log("[InventoryWebContents] Rendered", data.length, "item(s)");
-
-      } catch (err) {
-        console.error("[InventoryWebContents] Caught error:", err);
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error-msg").textContent =
-          `${err.message} — attempted: ${endpoint}`;
-        document.getElementById("error-box").style.display = "block";
-      }
+      document.getElementById("count-badge").textContent =
+        data.length === 1 ? "1 item" : `${data.length} items`;
+      renderCards(data);
+      document.getElementById("content-grid").style.display = "grid";
+      document.getElementById("footer").textContent =
+        `Production element ${PRODUCTION_ELEMENT_ID} · Fetched ${new Date().toLocaleTimeString()}`;
+      console.log("[InventoryWebContents] Rendered", data.length, "item(s)");
     }
 
     load();
