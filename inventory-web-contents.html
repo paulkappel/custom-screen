@@ -211,10 +211,9 @@
       ? `${BASE_URL}/Tessitura/api/TXN/InventoryWebContents?productionElementIds=${encodeURIComponent(PRODUCTION_ELEMENT_ID)}`
       : null;
 
-    // BASE_URL should point to the Cloudflare Worker (CORS proxy), not Tessitura directly
     console.group("[InventoryWebContents] Init");
     console.log("document.referrer :", document.referrer || "(empty)");
-    console.log("base param         :", params.get("base") || "(none — worker URL required)");
+    console.log("base param         :", params.get("base") || "(none)");
     console.log("BASE_URL resolved  :", BASE_URL || "(missing)");
     console.log("key                :", PRODUCTION_ELEMENT_ID || "(missing)");
     console.log("auth present       :", !!AUTH_KEY);
