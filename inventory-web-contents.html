@@ -203,13 +203,13 @@
     const params = new URLSearchParams(window.location.search);
     const AUTH_KEY = params.get("auth");
     const PRODUCTION_ELEMENT_ID = params.get("key");
-    // Base URL comes from the referrer (the Tessitura host that loaded this page)
-    const BASE_URL = document.referrer
-      ? new URL(document.referrer).origin
-      : window.location.origin;
+    // base param takes priority; fall back to referrer origin
+    const BASE_URL = params.get("base")
+      || (document.referrer ? new URL(document.referrer).origin : null);
 
-    const endpoint = `${BASE_URL}/Tessitura/api/TXN/InventoryWebContents` +
-      `?productionElementIds=${encodeURIComponent(PRODUCTION_ELEMENT_ID)}`;
+    const endpoint = BASE_URL
+      ? `${BASE_URL}/Tessitura/api/TXN/InventoryWebContents?productionElementIds=${encodeURIComponent(PRODUCTION_ELEMENT_ID)}`
+      : null;
 
     function formatDate(iso) {
       if (!iso) return "—";
@@ -249,10 +249,10 @@
     }
 
     async function load() {
-      if (!AUTH_KEY || !PRODUCTION_ELEMENT_ID) {
+      if (!AUTH_KEY || !PRODUCTION_ELEMENT_ID || !endpoint) {
         document.getElementById("loading").style.display = "none";
         document.getElementById("error-msg").textContent =
-          "Missing required URL parameters: auth and key must be provided.";
+          "Missing required parameters: auth, key, and base (or a referrer) must all be present.";
         document.getElementById("error-box").style.display = "block";
         return;
       }
@@ -265,7 +265,7 @@
         document.getElementById("loading").style.display = "none";
 
         if (!res.ok) {
-          throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+          throw new Error(`HTTP ${res.status} — ${res.statusText} (${endpoint})`);
         }
 
         const data = await res.json();
@@ -284,9 +284,9 @@
 
       } catch (err) {
         document.getElementById("loading").style.display = "none";
-        const box = document.getElementById("error-box");
-        document.getElementById("error-msg").textContent = err.message;
-        box.style.display = "block";
+        document.getElementById("error-msg").textContent =
+          `${err.message} — attempted: ${endpoint}`;
+        document.getElementById("error-box").style.display = "block";
       }
     }
 
