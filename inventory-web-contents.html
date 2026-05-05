@@ -211,6 +211,15 @@
       ? `${BASE_URL}/Tessitura/api/TXN/InventoryWebContents?productionElementIds=${encodeURIComponent(PRODUCTION_ELEMENT_ID)}`
       : null;
 
+    console.group("[InventoryWebContents] Init");
+    console.log("document.referrer :", document.referrer || "(empty)");
+    console.log("base param         :", params.get("base") || "(none)");
+    console.log("BASE_URL resolved  :", BASE_URL || "(missing)");
+    console.log("key                :", PRODUCTION_ELEMENT_ID || "(missing)");
+    console.log("auth present       :", !!AUTH_KEY);
+    console.log("endpoint           :", endpoint || "(missing)");
+    console.groupEnd();
+
     function formatDate(iso) {
       if (!iso) return "—";
       return new Date(iso).toLocaleString("en-US", {
@@ -258,19 +267,25 @@
       }
 
       try {
+        console.log("[InventoryWebContents] Fetching:", endpoint);
         const res = await fetch(endpoint, {
           headers: { "Authorization": `Bearer ${AUTH_KEY}` }
         });
 
+        console.log("[InventoryWebContents] Response:", res.status, res.statusText);
         document.getElementById("loading").style.display = "none";
 
         if (!res.ok) {
+          const body = await res.text().catch(() => "");
+          console.error("[InventoryWebContents] Error body:", body);
           throw new Error(`HTTP ${res.status} — ${res.statusText} (${endpoint})`);
         }
 
         const data = await res.json();
+        console.log("[InventoryWebContents] Data received:", data);
 
         if (!Array.isArray(data) || data.length === 0) {
+          console.warn("[InventoryWebContents] Empty result set");
           document.getElementById("empty").style.display = "block";
           return;
         }
@@ -281,8 +296,10 @@
         document.getElementById("content-grid").style.display = "grid";
         document.getElementById("footer").textContent =
           `Production element ${PRODUCTION_ELEMENT_ID} · Fetched ${new Date().toLocaleTimeString()}`;
+        console.log("[InventoryWebContents] Rendered", data.length, "item(s)");
 
       } catch (err) {
+        console.error("[InventoryWebContents] Caught error:", err);
         document.getElementById("loading").style.display = "none";
         document.getElementById("error-msg").textContent =
           `${err.message} — attempted: ${endpoint}`;
