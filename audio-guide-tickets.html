@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audio Guide Tickets</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 40px 48px;
+    font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #333333;
+    background: #ffffff;
+  }
+
+  h1.page-title {
+    font-size: 26px;
+    font-weight: 400;
+    color: #3c3c3c;
+    margin: 0 0 18px 0;
+  }
+
+  hr.page-divider {
+    border: none;
+    border-top: 1px solid #d9d9d9;
+    margin: 0 0 46px 0;
+  }
+
+  h2.section-title {
+    font-size: 19px;
+    font-weight: 400;
+    color: #3c3c3c;
+    margin: 0 0 18px 0;
+  }
+
+  table.tickets-table {
+    border-collapse: collapse;
+    width: auto;
+    max-width: 1180px;
+  }
+
+  table.tickets-table th,
+  table.tickets-table td {
+    text-align: left;
+    padding: 14px 22px;
+    border: 1px solid #e2e2e2;
+    white-space: nowrap;
+  }
+
+  table.tickets-table thead th {
+    background: #ffffff;
+    text-transform: uppercase;
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: #52657a;
+    border-bottom: 1px solid #d9d9d9;
+  }
+
+  table.tickets-table tbody tr:nth-child(odd) td {
+    background: #ffffff;
+  }
+
+  table.tickets-table tbody tr:nth-child(even) td {
+    background: #f5f5f5;
+  }
+
+  table.tickets-table td {
+    font-size: 14px;
+    color: #3c3c3c;
+  }
+
+  .redeem-code {
+    font-family: "Consolas", "Courier New", monospace;
+    background-color: #f9e4e2;
+    color: #b8433a;
+    padding: 3px 8px;
+    border-radius: 2px;
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+  }
+
+  .status-badge {
+    display: inline-block;
+    background-color: #4c4f57;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 12.5px;
+    padding: 5px 14px;
+    border-radius: 14px;
+    white-space: nowrap;
+  }
+
+  .btn-redeem {
+    border: 1px solid #a9a9a9;
+    background: #ffffff;
+    color: #3c3c3c;
+    font-size: 13px;
+    padding: 5px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-redeem:hover {
+    background: #f0f0f0;
+  }
+
+  th, td {
+    box-sizing: content-box;
+  }
+</style>
+</head>
+<body>
+
+  <h1 class="page-title">Audio Guide Tickets</h1>
+  <hr class="page-divider">
+
+  <h2 class="section-title">Your Audio Guide Tickets (Customer: <span id="customerNumber"></span>)</h2>
+
+  <table class="tickets-table">
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Ticket #</th>
+        <th>Redeem Code</th>
+        <th>Sub Line Item</th>
+        <th>Status</th>
+        <th>Attempts</th>
+        <th>Last Updated</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="ticketsBody">
+      <tr>
+        <td>9405665</td>
+        <td>116520865</td>
+        <td><span class="redeem-code">A4A16156FDD1</span></td>
+        <td>25290340</td>
+        <td><span class="status-badge">Ticketed, Paid</span></td>
+        <td>0</td>
+        <td>&ndash;</td>
+        <td><button class="btn-redeem" type="button">Redeem</button></td>
+      </tr>
+      <tr>
+        <td>9405665</td>
+        <td>116520864</td>
+        <td><span class="redeem-code">2F44726F4087</span></td>
+        <td>25290341</td>
+        <td><span class="status-badge">Ticketed, Paid</span></td>
+        <td>0</td>
+        <td>&ndash;</td>
+        <td><button class="btn-redeem" type="button">Redeem</button></td>
+      </tr>
+      <tr>
+        <td>9405665</td>
+        <td>116520863</td>
+        <td><span class="redeem-code">B349E3F590D1</span></td>
+        <td>25290342</td>
+        <td><span class="status-badge">Ticketed, Paid</span></td>
+        <td>0</td>
+        <td>&ndash;</td>
+        <td><button class="btn-redeem" type="button">Redeem</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    var params = new URLSearchParams(window.location.search);
+    var customer = params.get('customer') || '4430822';
+    document.getElementById('customerNumber').textContent = customer;
+  </script>
+
+</body>
+</html>
